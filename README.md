@@ -350,3 +350,38 @@ WARNING! This will remove:
 Are you sure you want to continue? [y/N] y
 Total reclaimed space: 0 B
 ```
+```
+root@debian:~# docker build --help
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+Options:
+      --build-arg list             Set build-time variables (default [])
+      --cache-from stringSlice     Images to consider as cache sources
+      --cgroup-parent string       Optional parent cgroup for the container
+      --compress                   Compress the build context using gzip
+      --cpu-period int             Limit the CPU CFS (Completely Fair Scheduler) period
+      --cpu-quota int              Limit the CPU CFS (Completely Fair Scheduler) quota
+  -c, --cpu-shares int             CPU shares (relative weight)
+      --cpuset-cpus string         CPUs in which to allow execution (0-3, 0,1)
+      --cpuset-mems string         MEMs in which to allow execution (0-3, 0,1)
+      --disable-content-trust      Skip image verification (default true)
+  -f, --file string                Name of the Dockerfile (Default is 'PATH/Dockerfile')
+      --force-rm                   Always remove intermediate containers
+      --help                       Print usage
+      --isolation string           Container isolation technology
+      --label list                 Set metadata for an image (default [])
+  -m, --memory string              Memory limit
+      --memory-swap string         Swap limit equal to memory plus swap: '-1' to enable unlimited swap
+      --network string             Set the networking mode for the RUN instructions during build (default "default")
+      --no-cache                   Do not use cache when building the image
+      --pull                       Always attempt to pull a newer version of the image
+  -q, --quiet                      Suppress the build output and print image ID on success
+      --rm                         Remove intermediate containers after a successful build (default true)
+      --security-opt stringSlice   Security options
+      --shm-size string            Size of /dev/shm, default value is 64MB
+  -t, --tag list                   Name and optionally a tag in the 'name:tag' format (default [])
+      --ulimit ulimit              Ulimit options (default [])
+```
