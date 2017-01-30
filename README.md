@@ -339,7 +339,7 @@ In old version docker we use `docker events` its change into `docker system even
 ```
 root@debian:~# docker system events
 ```
-It remove unwanted containers when we use `docker system prune`
+It removed unwanted when we use `docker system prune` shown like:
 ```
 root@debian:~# docker system prune
 WARNING! This will remove:
