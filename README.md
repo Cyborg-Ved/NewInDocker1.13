@@ -309,7 +309,7 @@ Commands:
 
 Run 'docker COMMAND --help' for more information on a command.
 ```
-4) its advance feature in `docker system` check with help
+4) It have advance feature in `docker system` check with help
 ```
 root@debian:~# docker system --help
 
