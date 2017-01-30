@@ -351,7 +351,7 @@ Are you sure you want to continue? [y/N] y
 Total reclaimed space: 0 B
 ```
 7) In `docker build` option `-q` argument added when we use `-q` an it remove intermediate containers
-    after a successful build . Press --help.
+    after a successful build or many more etc. Press --help.
 ```
 root@debian:~# docker build --help
 
