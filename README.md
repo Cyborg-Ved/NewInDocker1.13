@@ -247,6 +247,10 @@ Options:
   -q, --quiet           Only show numeric IDs
 ```
 ```
+root@debian:~# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+```
+```
 root@debian:~# docker images list
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 ```
