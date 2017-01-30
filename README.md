@@ -309,7 +309,7 @@ Commands:
 
 Run 'docker COMMAND --help' for more information on a command.
 ```
-4) It have advance feature in `docker system` check with help
+6) It have advance feature in `docker system` check with help
 ```
 root@debian:~# docker system --help
 
@@ -350,6 +350,7 @@ WARNING! This will remove:
 Are you sure you want to continue? [y/N] y
 Total reclaimed space: 0 B
 ```
+7) In `docker build` option `-q` argument added. Press --help.
 ```
 root@debian:~# docker build --help
 
@@ -385,3 +386,4 @@ Options:
   -t, --tag list                   Name and optionally a tag in the 'name:tag' format (default [])
       --ulimit ulimit              Ulimit options (default [])
 ```
+8) 
