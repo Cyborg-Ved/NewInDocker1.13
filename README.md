@@ -217,7 +217,7 @@ Commands:
 
 Run 'docker container COMMAND --help' for more information on a command.
 ```
-check running conatiner in different views something like:
+check running container in different views something like:
 ```
 root@debian:~# docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
