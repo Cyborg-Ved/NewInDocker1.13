@@ -339,7 +339,7 @@ In old version docker we use `docker events` its change into `docker system even
 ```
 root@debian:~# docker system events
 ```
-Its remove unwanted conatiners when we use `docker system prune`
+It remove unwanted conatiners when we use `docker system prune`
 ```
 root@debian:~# docker system prune
 WARNING! This will remove:
