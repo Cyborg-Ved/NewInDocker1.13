@@ -265,4 +265,88 @@ old version we have to seen like:
 root@debian:~# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 ```
-5) 
+5) Use `DOCKER_HIDE_LEGACY_COMMANDS=1 docker` to hide legacy commands:
+```
+root@debian:~# DOCKER_HIDE_LEGACY_COMMANDS=1 docker
+
+Usage:  docker COMMAND
+
+A self-sufficient runtime for containers
+
+Options:
+      --config string      Location of client config files (default "/root/.docker")
+  -D, --debug              Enable debug mode
+      --help               Print usage
+  -H, --host list          Daemon socket(s) to connect to (default [])
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Management Commands:
+  container   Manage containers
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  stack       Manage Docker stacks
+  swarm       Manage Swarm
+  system      Manage Docker
+  volume      Manage volumes
+
+Commands:
+  build       Build an image from a Dockerfile
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  run         Run a command in a new container
+  search      Search the Docker Hub for images
+  version     Show the Docker version information
+
+Run 'docker COMMAND --help' for more information on a command.
+```
+4) its advance feature in `docker system` check with help
+```
+root@debian:~# docker system --help
+
+Usage:  docker system COMMAND
+
+Manage Docker
+
+Options:
+      --help   Print usage
+
+Commands:
+  df          Show docker disk usage
+  events      Get real time events from the server
+  info        Display system-wide information
+  prune       Remove unused data
+
+Run 'docker system COMMAND --help' for more information on a command.
+```
+```
+root@debian:~# docker system df
+TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
+Images              0                   0                   0 B                 0 B
+Containers          0                   0                   0 B                 0 B
+Local Volumes       0                   0                   0 B                 0 B
+```
+In old version docker we use `docker events` its change into `docker system events`
+```
+root@debian:~# docker system events
+```
+Its remove unwanted conatiners when we use `docker system prune`
+```
+root@debian:~# docker system prune
+WARNING! This will remove:
+        - all stopped containers
+        - all volumes not used by at least one container
+        - all networks not used by at least one container
+        - all dangling images
+Are you sure you want to continue? [y/N] y
+Total reclaimed space: 0 B
+```
