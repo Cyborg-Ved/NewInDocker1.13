@@ -387,4 +387,46 @@ Options:
   -t, --tag list                   Name and optionally a tag in the 'name:tag' format (default [])
       --ulimit ulimit              Ulimit options (default [])
 ```
-8) 
+8) Docker swarm 
+ver 1.13
+```
+root@debian:~# docker swarm --help
+
+Usage:  docker swarm COMMAND
+
+Manage Swarm
+
+Options:
+      --help   Print usage
+
+Commands:
+  init        Initialize a swarm
+  join        Join a swarm as a node and/or manager
+  join-token  Manage join tokens
+  leave       Leave the swarm
+  unlock      Unlock swarm
+  unlock-key  Manage the unlock key
+  update      Update the swarm
+
+Run 'docker swarm COMMAND --help' for more information on a command.
+```
+ver 1.12
+```
+[root@fedora ~]# docker swarm --help
+
+Usage:  docker swarm COMMAND
+
+Manage Docker Swarm
+
+Options:
+      --help   Print usage
+
+Commands:
+  init        Initialize a swarm
+  join        Join a swarm as a node and/or manager
+  join-token  Manage join tokens
+  update      Update the swarm
+  leave       Leave the swarm (workers only)
+
+Run 'docker swarm COMMAND --help' for more information on a command.
+```
