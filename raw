@@ -52,3 +52,37 @@ root@debian:~# docker container list
 CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
 2d983d5509c2        ubuntu              "/bin/bash"         18 seconds ago       Up 18 seconds                           kind_bohr
 2b554ba3a43d        ubuntu              "/bin/bash"         About a minute ago   Up About a minute                       kind_lumiere
+
+
+plugin
+root@debian:~# docker plugin install --help
+
+Usage:  docker plugin install [OPTIONS] PLUGIN [KEY=VALUE...]
+
+Install a plugin
+
+Options:
+      --alias string            Local name for plugin
+      --disable                 Do not enable the plugin on install
+      --disable-content-trust   Skip image verification (default true)
+      --grant-all-permissions   Grant all permissions necessary to run the plugin
+      --help                    Print usage
+root@debian:~# docker pull vieud/sshfs
+Using default tag: latest
+^C
+root@debian:~# docker pull vieux/sshfs
+Using default tag: latest
+Error response from daemon: repository vieux/sshfs not found: does not exist or no pull access
+root@debian:~# docker plugin install vieus/sshfs:latest DEBUG=1
+^C
+root@debian:~# docker plugin install vieux/sshfs:latest DEBUG=1
+Plugin "vieux/sshfs:latest" is requesting the following privileges:
+ - network: [host]
+ - device: [/dev/fuse]
+ - capabilities: [CAP_SYS_ADMIN]
+Do you grant the above permissions? [y/N] y
+latest: Pulling from vieux/sshfs
+ca06593c3b54: Download complete
+Digest: sha256:660b5302a6951aa1c47c3042ca288d16973f236adbd2f77fc5571f164143adf5
+Status: Downloaded newer image for vieux/sshfs:latest
+Installed plugin vieux/sshfs:latest

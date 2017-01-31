@@ -430,3 +430,28 @@ Commands:
 
 Run 'docker swarm COMMAND --help' for more information on a command.
 ```
+9) Docker Plugin new in ver 1.13
+```
+root@debian:~# docker plugin --help
+
+Usage:  docker plugin COMMAND
+
+Manage plugins
+
+Options:
+      --help   Print usage
+
+Commands:
+  create      Create a plugin from a rootfs and configuration. Plugin data directory must contain config.json and rootfs directory.
+  disable     Disable a plugin
+  enable      Enable a plugin
+  inspect     Display detailed information on one or more plugins
+  install     Install a plugin
+  ls          List plugins
+  push        Push a plugin to a registry
+  rm          Remove one or more plugins
+  set         Change settings for a plugin
+
+Run 'docker plugin COMMAND --help' for more information on a command.
+```
+10)
