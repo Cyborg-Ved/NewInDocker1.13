@@ -208,3 +208,353 @@ Options:
   -u, --user string                      Username or UID (format: <name|uid>[:<group|gid>])
       --with-registry-auth               Send registry authentication details to swarm agents
   -w, --workdir string                   Working directory inside the container
+
+docke plugin example 
+
+There are three virtual machine like vm1, vm2, and vm3
+
+Acoordind to Docker meetup video we have to start from vm2
+
+In vm2 
+
+started with `docker plugin` --help command
+```
+root@vm2:~# docker plugin --help
+
+Usage:  docker plugin COMMAND
+
+Manage plugins
+
+Options:
+      --help   Print usage
+
+Commands:
+  create      Create a plugin from a rootfs and configuration. Plugin data directory must contain config.json and rootfs directory.
+  disable     Disable a plugin
+  enable      Enable a plugin
+  inspect     Display detailed information on one or more plugins
+  install     Install a plugin
+  ls          List plugins
+  push        Push a plugin to a registry
+  rm          Remove one or more plugins
+  set         Change settings for a plugin
+
+Run 'docker plugin COMMAND --help' for more information on a command.
+root@vm2:~#
+```
+```
+root@vm2:~# docker plugin install vieux/sshfs
+Plugin "vieux/sshfs" is requesting the following privileges:
+ - network: [host]
+ - device: [/dev/fuse]
+ - capabilities: [CAP_SYS_ADMIN]
+Do you grant the above permissions? [y/N] y
+latest: Pulling from vieux/sshfs
+ca06593c3b54: Download complete
+Digest: sha256:660b5302a6951aa1c47c3042ca288d16973f236adbd2f77fc5571f164143adf5
+Status: Downloaded newer image for vieux/sshfs:latest
+Installed plugin vieux/sshfs
+root@vm2:~#
+```
+```
+root@vm2:~# docker plugin list
+ID                  NAME                 DESCRIPTION               ENABLED
+404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   true
+root@vm2:~#
+```
+```
+root@vm2:~# docker plugin inspect vieux/sshfs:latest
+[
+    {
+        "Config": {
+            "Args": {
+                "Description": "",
+                "Name": "",
+                "Settable": null,
+                "Value": null
+            },
+            "Description": "sshFS plugin for Docker",
+            "Documentation": "https://docs.docker.com/engine/extend/plugins/",
+            "Entrypoint": [
+                "/docker-volume-sshfs"
+            ],
+            "Env": [
+                {
+                    "Description": "",
+                    "Name": "DEBUG",
+                    "Settable": [
+                        "value"
+                    ],
+                    "Value": "0"
+                }
+            ],
+            "Interface": {
+                "Socket": "sshfs.sock",
+                "Types": [
+                    "docker.volumedriver/1.0"
+                ]
+            },
+            "Linux": {
+                "AllowAllDevices": false,
+                "Capabilities": [
+                    "CAP_SYS_ADMIN"
+                ],
+                "Devices": [
+                    {
+                        "Description": "",
+                        "Name": "",
+                        "Path": "/dev/fuse",
+                        "Settable": null
+                    }
+                ]
+            },
+            "Mounts": null,
+            "Network": {
+                "Type": "host"
+            },
+            "PropagatedMount": "/mnt",
+            "User": {},
+            "WorkDir": "",
+            "rootfs": {
+                "diff_ids": [
+                    "sha256:0f70aa9391794138ca1b4db149027f1c56ce28136b0eba522bd8af7ea09bfb84"
+                ],
+                "type": "layers"
+            }
+        },
+        "Enabled": true,
+        "Id": "404d489a9b964279b4216adfddd51af1aec4607b14a0e44964d784f1eaa05963",
+        "Name": "vieux/sshfs:latest",
+        "Settings": {
+            "Args": [],
+            "Devices": [
+                {
+                    "Description": "",
+                    "Name": "",
+                    "Path": "/dev/fuse",
+                    "Settable": null
+                }
+            ],
+            "Env": [
+                "DEBUG=0"
+            ],
+            "Mounts": []
+        }
+    }
+]
+root@vm2:~#
+```
+```
+root@vm2:~# docker plugin disable  vieux/sshfs:latest
+vieux/sshfs:latest
+```
+```
+root@vm2:~# docker plugin set --help
+
+Usage:  docker plugin set PLUGIN KEY=VALUE [KEY=VALUE...]
+
+Change settings for a plugin
+
+Options:
+      --help   Print usage
+```
+```
+root@vm2:~# docker plugin set vieux/sshfs DEBUG=1
+```
+```
+root@vm2:~# docker plugin list
+ID                  NAME                 DESCRIPTION               ENABLED
+404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   false
+root@vm2:~# docker plugin enable vieux/sshfs:latest
+vieux/sshfs:latest
+```
+```
+root@vm2:~# docker plugin list
+ID                  NAME                 DESCRIPTION               ENABLED
+404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   true
+```
+```
+root@vm2:~# docker plugin inspect vieux/sshfs:latest
+[
+    {
+        "Config": {
+            "Args": {
+                "Description": "",
+                "Name": "",
+                "Settable": null,
+                "Value": null
+            },
+            "Description": "sshFS plugin for Docker",
+            "Documentation": "https://docs.docker.com/engine/extend/plugins/",
+            "Entrypoint": [
+                "/docker-volume-sshfs"
+            ],
+            "Env": [
+                {
+                    "Description": "",
+                    "Name": "DEBUG",
+                    "Settable": [
+                        "value"
+                    ],
+                    "Value": "0"
+                }
+            ],
+            "Interface": {
+                "Socket": "sshfs.sock",
+                "Types": [
+                    "docker.volumedriver/1.0"
+                ]
+            },
+            "Linux": {
+                "AllowAllDevices": false,
+                "Capabilities": [
+                    "CAP_SYS_ADMIN"
+                ],
+                "Devices": [
+                    {
+                        "Description": "",
+                        "Name": "",
+                        "Path": "/dev/fuse",
+                        "Settable": null
+                    }
+                ]
+            },
+            "Mounts": null,
+            "Network": {
+                "Type": "host"
+            },
+            "PropagatedMount": "/mnt",
+            "User": {},
+            "WorkDir": "",
+            "rootfs": {
+                "diff_ids": [
+                    "sha256:0f70aa9391794138ca1b4db149027f1c56ce28136b0eba522bd8af7ea09bfb84"
+                ],
+                "type": "layers"
+            }
+        },
+        "Enabled": true,
+        "Id": "404d489a9b964279b4216adfddd51af1aec4607b14a0e44964d784f1eaa05963",
+        "Name": "vieux/sshfs:latest",
+        "Settings": {
+            "Args": [],
+            "Devices": [
+                {
+                    "Description": "",
+                    "Name": "",
+                    "Path": "/dev/fuse",
+                    "Settable": null
+                }
+            ],
+            "Env": [
+                "DEBUG=1"
+            ],
+            "Mounts": []
+        }
+    }
+]
+root@vm2:~#
+```
+In vm3
+```
+root@vm3:~# docker plugin install vieux/sshfs DEBUG=1
+Plugin "vieux/sshfs" is requesting the following privileges:
+ - network: [host]
+ - device: [/dev/fuse]
+ - capabilities: [CAP_SYS_ADMIN]
+Do you grant the above permissions? [y/N] y
+latest: Pulling from vieux/sshfs
+ca06593c3b54: Download complete
+Digest: sha256:660b5302a6951aa1c47c3042ca288d16973f236adbd2f77fc5571f164143adf5
+Status: Downloaded newer image for vieux/sshfs:latest
+Installed plugin vieux/sshfs
+root@vm3:~#
+```
+```
+root@vm3:~# docker plugin install --help
+
+Usage:  docker plugin install [OPTIONS] PLUGIN [KEY=VALUE...]
+
+Install a plugin
+
+Options:
+      --alias string            Local name for plugin
+      --disable                 Do not enable the plugin on install
+      --disable-content-trust   Skip image verification (default true)
+      --grant-all-permissions   Grant all permissions necessary to run the plugin
+      --help                    Print usage
+```
+```
+[root@vm3 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
+sshvolume
+[root@vm3 ~]# docker volume list
+DRIVER               VOLUME NAME
+vieux/sshfs:latest   sshvolume
+
+```
+In vm2
+```
+[root@vm2 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
+sshvolume
+```
+```
+[root@vm2 ~]# docker volume list
+DRIVER               VOLUME NAME
+vieux/sshfs:latest   sshvolume
+```
+
+
+
+#COMPOSE TO SWARM 
+```
+[root@vm1 ~]# docker swarm init --advertise-addr 192.168.56.201
+Swarm initialized: current node (svdn8x2ksrx459bipioj7hxqb) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join \
+    --token SWMTKN-1-5sd1uh6ejdozm6j185dlgcbmpgl3o02jwdnb8typnwmpyb27cu-82a2shtv2tf1bc6xg19wfts8y \
+    192.168.56.201:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+```
+```
+[root@vm2 ~]# docker swarm join \
+>     --token SWMTKN-1-5sd1uh6ejdozm6j185dlgcbmpgl3o02jwdnb8typnwmpyb27cu-82a2shtv2tf1bc6xg19wfts8y \
+>     192.168.56.201:2377
+This node joined a swarm as a worker.
+```
+```
+[root@vm3 ~]# docker swarm join \
+>     --token SWMTKN-1-5sd1uh6ejdozm6j185dlgcbmpgl3o02jwdnb8typnwmpyb27cu-82a2shtv2tf1bc6xg19wfts8y \
+>     192.168.56.201:2377
+This node joined a swarm as a worker.
+```
+```
+[root@vm1 ~]# docker node list
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+iih5kho80enkkjo6ir4b0oqi6    vm2       Ready   Active
+leddh79ttcdmgabe8tcq592v0    vm3       Ready   Active
+svdn8x2ksrx459bipioj7hxqb *  vm1       Ready   Active        Leader
+```
+Use `docker stack --help` for help
+```
+[root@vm1 ~]# docker stack --help
+
+Usage:  docker stack COMMAND
+
+Manage Docker stacks
+
+Options:
+      --help   Print usage
+
+Commands:
+  deploy      Deploy a new stack or update an existing stack
+  ls          List stacks
+  ps          List the tasks in the stack
+  rm          Remove the stack
+  services    List the services in the stack
+
+Run 'docker stack COMMAND --help' for more information on a command.
+```
