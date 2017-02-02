@@ -485,12 +485,35 @@ Options:
       --help                    Print usage
 ```
 ```
+[root@vm1 tmp]# mkdir shared
+[root@vm1 tmp]# ls
+shared  vboxguest-Module.symvers
+[root@vm1 tmp]# cd shared/
+[root@vm1 shared]# ls
+[root@vm1 shared]# echo hello > world
+[root@vm1 shared]# ls
+world
+```
+```
 [root@vm3 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
 sshvolume
 [root@vm3 ~]# docker volume list
 DRIVER               VOLUME NAME
 vieux/sshfs:latest   sshvolume
-
+```
+```
+[root@vm3 code]# docker run -it -v sshvolume:/data  alpine sh
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+0a8490d0dfd3: Pull complete 
+Digest: sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Status: Downloaded newer image for alpine:latest
+/ # cd /data/
+/data # ls
+world
+/data # touch {1..9}
+/data # ls
+world   {1..9}
 ```
 In vm2
 ```
@@ -502,43 +525,376 @@ sshvolume
 DRIVER               VOLUME NAME
 vieux/sshfs:latest   sshvolume
 ```
-
-
-
-#COMPOSE TO SWARM 
+```
+[root@vm2 code]# docker run -it -v sshvolume:/data  alpine sh
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+0a8490d0dfd3: Pull complete 
+Digest: sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Status: Downloaded newer image for alpine:latest
+/ # cd /data/
+/data # ls
+/data # ls
+world   {1..9}
+```
 ```
 [root@vm1 ~]# docker swarm init --advertise-addr 192.168.56.201
-Swarm initialized: current node (svdn8x2ksrx459bipioj7hxqb) is now a manager.
+Swarm initialized: current node (e4fp9b0ud7fjldf58abnm6bzf) is now a manager.
 
 To add a worker to this swarm, run the following command:
 
     docker swarm join \
-    --token SWMTKN-1-5sd1uh6ejdozm6j185dlgcbmpgl3o02jwdnb8typnwmpyb27cu-82a2shtv2tf1bc6xg19wfts8y \
+    --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
     192.168.56.201:2377
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
-
 ```
 ```
 [root@vm2 ~]# docker swarm join \
->     --token SWMTKN-1-5sd1uh6ejdozm6j185dlgcbmpgl3o02jwdnb8typnwmpyb27cu-82a2shtv2tf1bc6xg19wfts8y \
+>     --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
 >     192.168.56.201:2377
 This node joined a swarm as a worker.
 ```
 ```
 [root@vm3 ~]# docker swarm join \
->     --token SWMTKN-1-5sd1uh6ejdozm6j185dlgcbmpgl3o02jwdnb8typnwmpyb27cu-82a2shtv2tf1bc6xg19wfts8y \
+>     --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
 >     192.168.56.201:2377
 This node joined a swarm as a worker.
 ```
 ```
 [root@vm1 ~]# docker node list
 ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
-iih5kho80enkkjo6ir4b0oqi6    vm2       Ready   Active
-leddh79ttcdmgabe8tcq592v0    vm3       Ready   Active
-svdn8x2ksrx459bipioj7hxqb *  vm1       Ready   Active        Leader
+3ijcv6et88g81sq9thjhlfl7t    vm2       Ready   Active
+e4fp9b0ud7fjldf58abnm6bzf *  vm1       Ready   Active        Leader
+nxu8s5frib7ntn8fuc4babepq    vm3       Ready   Active
 ```
-Use `docker stack --help` for help
+```
+[root@vm1 ~]# docker container list
+CONTAINER ID        IMAGE          COMMAND           CREATED           STATUS            PORTS             NAMES
+```
+```
+[root@vm1 ~]# docker service create --mount src=sshvolumes,dst=/data --replicas 2 --name foo alpine sh -c "while true;do echo \`cat /etc/hostname\` >> /data/hostnames; sleep 1; done"
+arh5p9k6pitokwau78ul33y28
+[root@vm1 ~]# docker service list
+ID            NAME  MODE        REPLICAS  IMAGE
+arh5p9k6pito  foo   replicated  2/2       alpine:latest
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# docker container list
+CONTAINER ID        IMAGE                                                                            COMMAND                  CREATED             STATUS              PORTS               NAMES
+23320a295c9a        alpine@sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8   "sh -c 'while true..."   7 minutes ago       Up 7 minutes                            foo.2.rcqsxhhabpmnmrwszqu98wm73
+```
+```
+[root@vm1 ~]# docker service ps foo
+ID            NAME   IMAGE          NODE  DESIRED STATE  CURRENT STATE          ERROR  PORTS
+i7a7ljvjapf2  foo.1  alpine:latest  vm2   Running        Running 3 minutes ago
+rcqsxhhabpmn  foo.2  alpine:latest  vm1   Running        Running 2 minutes ago
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# cd /tmp/shared/
+[root@vm1 shared]# ls
+{1..9}  hostnames  world
+```
+```
+[root@vm1 shared]# cat hostnames 
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+[root@vm1 shared]#
+```
+```
+[root@vm1 shared]# cat hostnames | less
+
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+:
+```
+#COMPOSE TO SWARM 
 ```
 [root@vm1 ~]# docker stack --help
 
@@ -557,7 +913,25 @@ Commands:
   services    List the services in the stack
 
 Run 'docker stack COMMAND --help' for more information on a command.
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# docker stack deploy --help
+
+Usage:  docker stack deploy [OPTIONS] STACK
+
+Deploy a new stack or update an existing stack
+
+Aliases:
+  deploy, up
+
+Options:
+  -c, --compose-file string   Path to a Compose file
+      --help                  Print usage
+      --with-registry-auth    Send registry authentication details to Swarm agents
+[root@vm1 ~]#
 ```
 ```
 
 ```
+
