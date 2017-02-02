@@ -932,6 +932,45 @@ Options:
 [root@vm1 ~]#
 ```
 ```
+[root@vm1 ~]# git clone https://github.com/cloudyuga/rsvpapp.git
+Cloning into 'rsvpapp'...
+remote: Counting objects: 247, done.
+remote: Compressing objects: 100% (24/24), done.
+remote: Total 247 (delta 9), reused 0 (delta 0), pack-reused 222
+Receiving objects: 100% (247/247), 102.27 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (115/115), done.
+Checking connectivity... done.
+[root@vm1 ~]# cd rsvpapp/
+[root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
+Unsupported Compose file version: "2". The only version supported is "3" (or "3.0")
+[root@vm1 rsvpapp]# nano docker-compose.yml
+[root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
+Ignoring deprecated options:
+
+expose: Exposing ports is unnecessary - services on the same network can access each other's containers on any port.
+
+Creating network FOO_rsvpnet
+Creating service FOO_mongodb
+Creating service FOO_web
+[root@vm1 rsvpapp]# docker stack list
+NAME  SERVICES
+FOO   2
+[root@vm1 rsvpapp]#
+```
+```
+[root@vm1 rsvpapp]# docker stack services FOO
+ID            NAME         MODE        REPLICAS  IMAGE
+fwbn4uvu3jos  FOO_web      replicated  1/1       teamcloudyuga/rsvpapp:mooc
+w5fm9e07hgl0  FOO_mongodb  replicated  1/1       mongo:3.3
+[root@vm1 rsvpapp]#
+```
+```
+[root@vm1 rsvpapp]# docker stack rm FOO
+Removing service FOO_web
+Removing service FOO_mongodb
+Removing network FOO_rsvpnet
+```
+```
 
 ```
 
