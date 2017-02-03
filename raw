@@ -1295,8 +1295,17 @@ linux   -        virtualbox   Running   tcp://192.168.99.100:2376           v1.1
 ```
 2. If the Docker-machine is not running then start it as below
 ```
-$ docker-machine stop linux
-$ docker-machine start linux
+root@ved /home/ved/mybox/test$ docker-machine stop linux
+Stopping "linux"...
+Machine "linux" was stopped.
+root@ved /home/ved/mybox/test$ docker-machine start linux
+Starting "linux"...
+(linux) Check network to re-create if needed...
+(linux) Waiting for an IP...
+Machine "linux" was started.
+Waiting for SSH to be available...
+Detecting the provisioner...
+Started machines may have new IP addresses. You may need to re-run the `docker-machine env` command.
 ```
 3. List all the locally present images
 ```
@@ -1347,8 +1356,17 @@ linux   -        virtualbox   Running   tcp://192.168.99.100:2376           v1.1
 ```
 2. If the Docker-machine is not running then start it as below
 ```
-$ docker-machine stop linux
-$ docker-machine start linux
+root@ved /home/ved/mybox/test$ docker-machine stop linux
+Stopping "linux"...
+Machine "linux" was stopped.
+root@ved /home/ved/mybox/test$ docker-machine start linux
+Starting "linux"...
+(linux) Check network to re-create if needed...
+(linux) Waiting for an IP...
+Machine "linux" was started.
+Waiting for SSH to be available...
+Detecting the provisioner...
+Started machines may have new IP addresses. You may need to re-run the `docker-machine env` command.
 ```
 3. Create Dockerfile in test directory.
 ```
@@ -1454,4 +1472,7 @@ Step 3/3 : CMD /usr/games/fortune -a | cowsay
  ---> 9699bdfb5b00
 Removing intermediate container 09d889019e2d
 Successfully built 9699bdfb5b00
+```
+```
+
 ```
