@@ -303,7 +303,7 @@ Total reclaimed space: 0 B
 ```
 #Example of pervious 
 ```
-root@debian:~# docker pull alpine
+root@debian:~# docker image pull alpine
 Using default tag: latest
 latest: Pulling from library/alpine
 0a8490d0dfd3: Pull complete 
