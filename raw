@@ -1324,16 +1324,44 @@ alpine              latest              88e169ea8f46        5 weeks ago         
 5. Tag image and remove the images
 ```
 root@ved /home/ved/mybox$ docker tag busybox cloudyuga/busybox:test
+
 root@ved /home/ved/mybox$ docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 nginx               alpine              c24ab147adf9        9 days ago          54.3 MB
 busybox             latest              7968321274dc        2 weeks ago         1.11 MB
 cloudyuga/busybox   test                7968321274dc        2 weeks ago         1.11 MB
 alpine              latest              88e169ea8f46        5 weeks ago         3.98 MB
+
 root@ved /home/ved/mybox$ docker rmi alpine
 Untagged: alpine:latest
 Untagged: alpine@sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
 Deleted: sha256:88e169ea8f46ff0d0df784b1b254a15ecfaf045aee1856dca1ec242fdd231ddd
 Deleted: sha256:60ab55d3379d47c1ba6b6225d59d10e1f52096ee9d5c816e42c635ccc57a5a2b
+```
+##Dockerfile
+1. Check whether Docker-machine created in local linux which is running or not?
+```
+root@ved /home/ved/mybox$ docker-machine ls
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
+linux   -        virtualbox   Running   tcp://192.168.99.100:2376           v1.13.0
+```
+2. If the Docker-machine is not running then start it as below
+```
+$ docker-machine stop linux
+$ docker-machine start linux
+```
+3. Create Dockerfile in test directory.
+```
+Deleted: sha256:60ab55d3379d47c1ba6b6225d59d10e1f52096ee9d5c816e42c635ccc57a5a2b
+root@ved /home/ved/mybox$ mkdir test
+root@ved /home/ved/mybox$ cd test
+root@ved /home/ved/mybox/test$ vim Dockerfile
+
+FROM docker/whalesay:latest
+RUN apt-get -y update && apt-get install -y fortunes
+CMD /usr/games/fortune -a | cowsay
+```
+4. Build the image from Dockerfile
+```
 
 ```
