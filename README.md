@@ -318,7 +318,7 @@ Containers          0                   0                   0 B                 
 Local Volumes       0                   0                   0 B                 0 B
 ```
 ```
-root@debian:~# docker pull nginx
+root@debian:~# docker image pull nginx
 Using default tag: latest
 latest: Pulling from library/nginx
 5040bd298390: Pull complete 
