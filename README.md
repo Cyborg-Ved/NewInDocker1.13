@@ -82,54 +82,6 @@ Run 'docker COMMAND --help' for more information on a command.
 ```
 2) Earlier we check by `docker info` to `docker system info`
 ```
-root@debian:~# docker info
-Containers: 0
- Running: 0
- Paused: 0
- Stopped: 0
-Images: 0
-Server Version: 1.13.0
-Storage Driver: aufs
- Root Dir: /var/lib/docker/aufs
- Backing Filesystem: extfs
- Dirs: 0
- Dirperm1 Supported: true
-Logging Driver: json-file
-Cgroup Driver: cgroupfs
-Plugins: 
- Volume: local
- Network: bridge host macvlan null overlay
-Swarm: inactive
-Runtimes: runc
-Default Runtime: runc
-Init Binary: docker-init
-containerd version: 03e5862ec0d8d3b3f750e19fca3ee367e13c090e
-runc version: 2f7393a47307a16f8cee44a37b262e8b81021e3e
-init version: 949e6fa
-Kernel Version: 3.16.0-4-amd64
-Operating System: Debian GNU/Linux 8 (jessie)
-OSType: linux
-Architecture: x86_64
-CPUs: 2
-Total Memory: 1000 MiB
-Name: debian
-ID: SJFZ:FL7Y:7LJ5:XBHH:6E6I:7DPJ:XCEV:L2EY:KD5P:B7LK:KZ4U:INGE
-Docker Root Dir: /var/lib/docker
-Debug Mode (client): false
-Debug Mode (server): false
-Registry: https://index.docker.io/v1/
-WARNING: No memory limit support
-WARNING: No swap limit support
-WARNING: No kernel memory limit support
-WARNING: No oom kill disable support
-WARNING: No cpu cfs quota support
-WARNING: No cpu cfs period support
-Experimental: false
-Insecure Registries:
- 127.0.0.0/8
-Live Restore Enabled: false
-```
-```
 root@debian:~# docker system info
 Containers: 0
  Running: 0
