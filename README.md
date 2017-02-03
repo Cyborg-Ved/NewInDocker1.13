@@ -82,7 +82,7 @@ Run 'docker COMMAND --help' for more information on a command.
 ```
 2) Use `DOCKER_HIDE_LEGACY_COMMANDS=1 docker` to hide legacy commands.
 
-This may help which one new and which one old 
+This may help which one new or which one old 
 ```
 root@debian:~# DOCKER_HIDE_LEGACY_COMMANDS=1 docker
 
