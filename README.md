@@ -1393,7 +1393,7 @@ Options:
 ```
 Take old version compose file and change in to version 2 to 3 in `docker-compose.yml`.
 
-we have to take https://github.com/cloudyuga/rsvpapp.git
+We have to take https://github.com/cloudyuga/rsvpapp.git
 
 Clone a repository from github
 ```
@@ -1406,7 +1406,7 @@ Receiving objects: 100% (247/247), 102.27 KiB | 0 bytes/s, done.
 Resolving deltas: 100% (115/115), done.
 Checking connectivity... done.
 ```
-change the directory or go to `rsvpapp`
+Change the directory or go to `rsvpapp`
 ```
 [root@vm1 ~]# cd rsvpapp/
 ```
@@ -1415,9 +1415,9 @@ If we deploy from older version they can't be supported.
 [root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
 Unsupported Compose file version: "2". The only version supported is "3" (or "3.0")
 ```
-we can change version 2 into 3
+We can change version 2 into 3
 
-berfore
+Berfore
 ```
 [root@vm1 rsvpapp]# nano docker-compose.yml
 version: '2'
@@ -1489,7 +1489,7 @@ networks:
 volumes:
    db_data:
 ```
-```
+Start deploy compose to swarm.
 ```
 [root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
 Ignoring deprecated options:
@@ -1499,11 +1499,15 @@ expose: Exposing ports is unnecessary - services on the same network can access 
 Creating network FOO_rsvpnet
 Creating service FOO_mongodb
 Creating service FOO_web
+```
+Check list of stacks by `docker stack ls`.
+```
 [root@vm1 rsvpapp]# docker stack list
 NAME  SERVICES
 FOO   2
 [root@vm1 rsvpapp]#
 ```
+Check list the services in the stack by `docker stack services FOO`.
 ```
 [root@vm1 rsvpapp]# docker stack services FOO
 ID            NAME         MODE        REPLICAS  IMAGE
@@ -1511,6 +1515,10 @@ fwbn4uvu3jos  FOO_web      replicated  1/1       teamcloudyuga/rsvpapp:mooc
 w5fm9e07hgl0  FOO_mongodb  replicated  1/1       mongo:3.3
 [root@vm1 rsvpapp]#
 ```
+We can also edit the compose file to change the configuration.
+```
+```
+Finally how we remove the stack.
 ```
 [root@vm1 rsvpapp]# docker stack rm FOO
 Removing service FOO_web
