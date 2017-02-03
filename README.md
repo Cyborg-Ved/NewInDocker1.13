@@ -126,7 +126,7 @@ Commands:
 
 Run 'docker COMMAND --help' for more information on a command.
 ```
-2) Earlier we check by `docker info` to `docker system info`
+3) Earlier we check by `docker info` to `docker system info`
 ```
 root@debian:~# docker system info
 Containers: 0
@@ -175,7 +175,7 @@ Insecure Registries:
  127.0.0.0/8
 Live Restore Enabled: false
 ```
-3) Container command
+4) Container command
 ```
 root@debian:~# docker container --help
 
@@ -221,7 +221,7 @@ root@debian:~# docker container list
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 ```
 
-4) Image command
+5)Image command
 
 Type help for image
 ```
