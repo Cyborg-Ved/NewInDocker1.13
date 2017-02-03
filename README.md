@@ -1353,7 +1353,7 @@ Stack is new in Docker 1.13. So, how can we use following step:
 
 An it will applicable when `docker swarm` initialized
 
-Check help by `docker stack --help`
+Check help by `docker stack --help` and what type of option or argment use.
 ```
 [root@vm1 ~]# docker stack --help
 
@@ -1374,6 +1374,7 @@ Commands:
 Run 'docker stack COMMAND --help' for more information on a command.
 [root@vm1 ~]#
 ```
+Check help for deploy or up by `docker stack deploy --help`.
 ```
 [root@vm1 ~]# docker stack deploy --help
 
@@ -1429,4 +1430,5 @@ Removing service FOO_web
 Removing service FOO_mongodb
 Removing network FOO_rsvpnet
 ```
-
+##Reference
+https://docs.docker.com/docker-cloud/getting-started/deploy-app/11_service_stacks/
