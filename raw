@@ -1010,8 +1010,255 @@ Setting Docker configuration on the remote daemon...
 Checking connection to Docker...
 Docker is up and running!
 To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env linux
+```
+```
 root@ved /home/ved/mybox$ docker-machine ls
 NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
 linux   -        virtualbox   Running   tcp://192.168.99.100:2376           v1.13.0
 ```
+```
+root@ved /home/ved/mybox$ docker -H tcp://192.168.99.100:2376 ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
+```
+root@ved /home/ved/mybox$ docker-machine env linux
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://192.168.99.100:2376"
+export DOCKER_CERT_PATH="/root/.docker/machine/machines/linux"
+export DOCKER_MACHINE_NAME="linux"
+# Run this command to configure your shell:
+# eval $(docker-machine env linux)
+```
+```
+root@ved /home/ved/mybox$ docker-machine env linux
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://192.168.99.100:2376"
+export DOCKER_CERT_PATH="/root/.docker/machine/machines/linux"
+export DOCKER_MACHINE_NAME="linux"
+# Run this command to configure your shell:
+# eval $(docker-machine env linux)
+root@ved /home/ved/mybox$ export DOCKER_TLS_VERIFY="1"
+root@ved /home/ved/mybox$ export DOCKER_HOST="tcp://192.168.99.100:2376"
+root@ved /home/ved/mybox$ export DOCKER_CERT_PATH="/root/.docker/machine/machines/linux"
+root@ved /home/ved/mybox$ export DOCKER_MACHINE_NAME="linux"
+root@ved /home/ved/mybox$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+root@ved /home/ved/mybox$ docker run -i -t alpine sh
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+0a8490d0dfd3: Pull complete
+Digest: sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Status: Downloaded newer image for alpine:latest
+/ # ps aux
+PID   USER     TIME   COMMAND
+    1 root       0:00 sh
+    5 root       0:00 ps aux
+/ # ps aux
+```
+```
+root@ved /home/ved/mybox$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+971300122cc9        alpine              "sh"                42 seconds ago      Up 41 seconds                           xenodochial_brahmagupta
+```
+```
+root@ved /home/ved/mybox$ docker run -d --name=cloudyuga nginx:alpine
+Unable to find image 'nginx:alpine' locally
+alpine: Pulling from library/nginx
+b7f33cc0b48e: Pull complete
+9a57e9207914: Pull complete
+79f62f9c7236: Pull complete
+50a2334db9bc: Pull complete
+Digest: sha256:d34e2176dab830485b0cb79340e1d5ebf7d530b34ad7bfe05d269ffed20a88f4
+Status: Downloaded newer image for nginx:alpine
+a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664
+root@ved /home/ved/mybox$ docker -H tcp://192.168.99.100:2376 ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+a46b2640d338        nginx:alpine        "nginx -g 'daemon ..."   4 seconds ago       Up 4 seconds        80/tcp, 443/tcp     cloudyuga
+971300122cc9        alpine              "sh"                     5 minutes ago       Up 5 minutes                            xenodochial_brahmagupta
+```
+```
+root@ved /home/ved/mybox$ docker inspect cloudyuga | less
 
+[
+    {
+        "Id": "a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664",
+        "Created": "2017-02-03T09:01:42.013940101Z",
+        "Path": "nginx",
+        "Args": [
+            "-g",
+            "daemon off;"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 3043,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2017-02-03T09:01:42.181721371Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:c24ab147adf965ae853a53f30bf8613794d3f39eea27f8b00ba8b7c61d2a268c",
+        "ResolvConfPath": "/mnt/sda1/var/lib/docker/containers/a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664/resolv.conf",
+        "HostnamePath": "/mnt/sda1/var/lib/docker/containers/a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664/hostname",
+        "HostsPath": "/mnt/sda1/var/lib/docker/containers/a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664/hosts",
+        "LogPath": "/mnt/sda1/var/lib/docker/containers/a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664/a46b2640d3385c27fe1deaccf85cc87a7767ce6dc279c74e9f0115c056e7f664-json.log",
+        "Name": "/cloudyuga",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        },
+        "GraphDriver": {
+            "Name": "aufs",
+            "Data": null
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "a46b2640d338",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "443/tcp": {},
+                "80/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NGINX_VERSION=1.11.9"
+            ],
+            "Cmd": [
+                "nginx",
+                "-g",
+                "daemon off;"
+            ],
+            "ArgsEscaped": true,
+            "Image": "nginx:alpine",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "848375b486e6240b6936c90d53eefdd4be209134fb61f1e5a6fde72e4b0f59ab",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "443/tcp": null,
+                "80/tcp": null
+            },
+            "SandboxKey": "/var/run/docker/netns/848375b486e6",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "03528e6ba4aadd0d29aa297d2ef5df0ed6e5e2527e94647e82650d24cf43336c",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.3",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:03",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "96bd94dfc249cf78b68baa921f6445c054f26aefed6a8378ef34b2b82e4db9a8",
+                    "EndpointID": "03528e6ba4aadd0d29aa297d2ef5df0ed6e5e2527e94647e82650d24cf43336c",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:03"
+                }
+            }
+        }
+    }
+]
+(END)
+```
