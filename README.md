@@ -598,10 +598,9 @@ ID                  NAME                 DESCRIPTION               ENABLED
 404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   true
 root@vm2:~#
 ```
-when we install docker plugin without add argument `DEBUG` option it will be `0`.
+when we install docker plugin without add argument env `DEBUG` it will be `0`. we can also use it to install like `docker plugin install vieux/sshfs:latest DEBUG=1 `
 
-we give trick how we add or make it in another example below:
-
+we give trick how we add or make it in another example below we can make it `DEBUG=1`:
 
 ```
 root@vm2:~# docker plugin inspect vieux/sshfs:latest
@@ -685,10 +684,14 @@ root@vm2:~# docker plugin inspect vieux/sshfs:latest
 ]
 root@vm2:~#
 ```
+First disable running plugin or how we disable the plugin.
 ```
 root@vm2:~# docker plugin disable  vieux/sshfs:latest
 vieux/sshfs:latest
 ```
+Need to set the previous plugin `vieux/sshfs`. and make debug mode.
+
+check by help `docker plugin set`
 ```
 root@vm2:~# docker plugin set --help
 
@@ -699,13 +702,20 @@ Change settings for a plugin
 Options:
       --help   Print usage
 ```
+Use `DEBUG=1` option need to set.
 ```
 root@vm2:~# docker plugin set vieux/sshfs DEBUG=1
 ```
+check list of plugin by `docker plugin list`. Its is false.
 ```
 root@vm2:~# docker plugin list
 ID                  NAME                 DESCRIPTION               ENABLED
 404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   false
+root@vm2:~# docker plugin enable vieux/sshfs:latest
+vieux/sshfs:latest
+```
+Now enable the plugin
+```
 root@vm2:~# docker plugin enable vieux/sshfs:latest
 vieux/sshfs:latest
 ```
@@ -714,6 +724,7 @@ root@vm2:~# docker plugin list
 ID                  NAME                 DESCRIPTION               ENABLED
 404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   true
 ```
+check list of plugin by `docker plugin list`. Its is true.
 ```
 root@vm2:~# docker plugin inspect vieux/sshfs:latest
 [
@@ -797,6 +808,7 @@ root@vm2:~# docker plugin inspect vieux/sshfs:latest
 root@vm2:~#
 ```
 In vm3
+First install plugin `vieux/sshfs` in `DEBUG=1`
 ```
 root@vm3:~# docker plugin install vieux/sshfs DEBUG=1
 Plugin "vieux/sshfs" is requesting the following privileges:
@@ -811,6 +823,7 @@ Status: Downloaded newer image for vieux/sshfs:latest
 Installed plugin vieux/sshfs
 root@vm3:~#
 ```
+If don't understand  step we use `--help`.
 ```
 root@vm3:~# docker plugin install --help
 
@@ -825,6 +838,7 @@ Options:
       --grant-all-permissions   Grant all permissions necessary to run the plugin
       --help                    Print usage
 ```
+First we create directory in `vm1` name is `shared` in tmp directory. or may we can create file name is `world`.
 ```
 [root@vm1 tmp]# mkdir shared
 [root@vm1 tmp]# ls
@@ -835,6 +849,8 @@ shared  vboxguest-Module.symvers
 [root@vm1 shared]# ls
 world
 ```
+
+Earlier we have an add plugin `vieux/sshfs` we can use to create volume in `vm1` in `/tmp/shared/` directory and olume name will be sshvolume
 ```
 [root@vm3 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
 sshvolume
