@@ -1019,23 +1019,25 @@ Options:
       --with-registry-auth               Send registry authentication details to swarm agents
   -w, --workdir string                   Working directory inside the container
 ```
-
+Create new service mount volume `sshvolume` that can attach a filesystem mount to the service and destination directory will be `/data` in alpine image with 2 replicas.
 ```
 [root@vm1 ~]# docker service create --mount src=sshvolume,dst=/data --replicas 2 --name foo alpine sh -c "while true;do echo \`cat /etc/hostname\` >> /data/hostnames; sleep 1; done"
 arh5p9k6pitokwau78ul33y28
 ```
-
+Check services list by `docker service list`
 ```
 [root@vm1 ~]# docker service list
 ID            NAME  MODE        REPLICAS  IMAGE
 arh5p9k6pito  foo   replicated  2/2       alpine:latest
 [root@vm1 ~]#
 ```
+Also check list of container by `docker container list`
 ```
 [root@vm1 ~]# docker container list
 CONTAINER ID        IMAGE                                                                            COMMAND                  CREATED             STATUS              PORTS               NAMES
 23320a295c9a        alpine@sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8   "sh -c 'while true..."   7 minutes ago       Up 7 minutes                            foo.2.rcqsxhhabpmnmrwszqu98wm73
 ```
+List the tasks of a service by `docker service ps foo`
 ```
 [root@vm1 ~]# docker service ps foo
 ID            NAME   IMAGE          NODE  DESIRED STATE  CURRENT STATE          ERROR  PORTS
@@ -1043,6 +1045,7 @@ i7a7ljvjapf2  foo.1  alpine:latest  vm2   Running        Running 3 minutes ago
 rcqsxhhabpmn  foo.2  alpine:latest  vm1   Running        Running 2 minutes ago
 [root@vm1 ~]#
 ```
+Finally, go to vm1 use below step.
 ```
 [root@vm1 ~]# cd /tmp/shared/
 [root@vm1 shared]# ls
@@ -1346,6 +1349,11 @@ cbd14efe1392
 :
 ```
 #COMPOSE TO SWARM 
+Stack is new in Docker 1.13. So, how can we use following step:
+
+An it will applicable when `docker swarm` initialized
+
+Check help by `docker stack --help`
 ```
 [root@vm1 ~]# docker stack --help
 
