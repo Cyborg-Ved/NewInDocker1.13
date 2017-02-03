@@ -851,7 +851,7 @@ shared  vboxguest-Module.symvers
 world
 ```
 
-Earlier we have an add plugin `vieux/sshfs` we can use to create volume in `vm1` in `/tmp/shared/` directory and volume name will be `sshvolume`.
+Earlier we have an add plugin `vieux/sshfs` we can use to create an volume in `vm1` in `/tmp/shared/` directory and volume name will be `sshvolume`.
 ```
 [root@vm3 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
 sshvolume
