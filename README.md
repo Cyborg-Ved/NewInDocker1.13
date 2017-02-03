@@ -335,7 +335,7 @@ Containers          0                   0                   0 B                 
 Local Volumes       0                   0                   0 B                 0 B
 ```
 ```
-root@debian:~# docker run -itd ubuntu
+root@debian:~# docker container run -itd ubuntu
 Unable to find image 'ubuntu:latest' locally
 latest: Pulling from library/ubuntu
 8aec416115fd: Pull complete
@@ -355,7 +355,7 @@ Containers          1                   1                   0 B                 
 Local Volumes       0                   0                   0 B                 0 B
 ```
 ```
-root@debian:~# docker run -v /mnt/:/data -itd ubuntu
+root@debian:~# docker container run -v /mnt/:/data -itd ubuntu
 2d983d5509c2c6369449000654f39342a014644f37b9b245118e40e3c2599e05
 root@debian:~# docker system df
 TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
