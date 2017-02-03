@@ -126,7 +126,7 @@ Commands:
 
 Run 'docker COMMAND --help' for more information on a command.
 ```
-3) Earlier we check by `docker info` to `docker system info`
+3) Earlier we check by `docker info`. Now we check by `docker system info`
 ```
 root@debian:~# docker system info
 Containers: 0
