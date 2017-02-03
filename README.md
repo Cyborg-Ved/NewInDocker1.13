@@ -454,4 +454,861 @@ Commands:
 
 Run 'docker plugin COMMAND --help' for more information on a command.
 ```
-10)
+10) In `docker service` command
+root@debian:~# docker service --help
+                                                                                                                                                     
+Usage:  docker service COMMAND                                                                                                                       
+                                                                                                                                                     
+Manage services
+
+Options:
+      --help   Print usage
+
+Commands:
+  create      Create a new service
+  inspect     Display detailed information on one or more services
+  ls          List services
+  ps          List the tasks of a service
+  rm          Remove one or more services
+  scale       Scale one or multiple replicated services
+  update      Update a service
+
+Run 'docker service COMMAND --help' for more information on a command.
+```
+```
+root@debian:~# docker service update --help
+
+Usage:  docker service update [OPTIONS] SERVICE
+
+Update a service
+
+Options:
+      --args string                      Service command args
+      --constraint-add list              Add or update a placement constraint (default [])
+      --constraint-rm list               Remove a constraint (default [])
+      --container-label-add list         Add or update a container label (default [])
+      --container-label-rm list          Remove a container label by its key (default [])
+      --dns-add list                     Add or update a custom DNS server (default [])
+      --dns-option-add list              Add or update a DNS option (default [])
+      --dns-option-rm list               Remove a DNS option (default [])
+      --dns-rm list                      Remove a custom DNS server (default [])
+      --dns-search-add list              Add or update a custom DNS search domain (default [])
+      --dns-search-rm list               Remove a DNS search domain (default [])
+      --endpoint-mode string             Endpoint mode (vip or dnsrr)
+      --env-add list                     Add or update an environment variable (default [])
+      --env-rm list                      Remove an environment variable (default [])
+      --force                            Force update even if no changes require it
+      --group-add list                   Add an additional supplementary user group to the container (default [])
+      --group-rm list                    Remove a previously added supplementary user group from the container (default [])
+      --health-cmd string                Command to run to check health
+      --health-interval duration         Time between running the check (ns|us|ms|s|m|h) (default none)
+      --health-retries int               Consecutive failures needed to report unhealthy
+      --health-timeout duration          Maximum time to allow one check to run (ns|us|ms|s|m|h) (default none)
+      --help                             Print usage
+      --host-add list                    Add or update a custom host-to-IP mapping (host:ip) (default [])
+      --host-rm list                     Remove a custom host-to-IP mapping (host:ip) (default [])
+      --hostname string                  Container hostname
+      --image string                     Service image tag
+      --label-add list                   Add or update a service label (default [])
+      --label-rm list                    Remove a label by its key (default [])
+      --limit-cpu decimal                Limit CPUs (default 0.000)
+      --limit-memory bytes               Limit Memory (default 0 B)
+      --log-driver string                Logging driver for service
+      --log-opt list                     Logging driver options (default [])
+      --mount-add mount                  Add or update a mount on a service
+      --mount-rm list                    Remove a mount by its target path (default [])
+      --no-healthcheck                   Disable any container-specified HEALTHCHECK
+      --publish-add port                 Add or update a published port
+      --publish-rm port                  Remove a published port by its target port
+      --replicas uint                    Number of tasks (default none)
+      --reserve-cpu decimal              Reserve CPUs (default 0.000)
+      --reserve-memory bytes             Reserve Memory (default 0 B)
+      --restart-condition string         Restart when condition is met (none, on-failure, or any)
+      --restart-delay duration           Delay between restart attempts (ns|us|ms|s|m|h) (default none)
+      --restart-max-attempts uint        Maximum number of restarts before giving up (default none)
+      --restart-window duration          Window used to evaluate the restart policy (ns|us|ms|s|m|h) (default none)
+      --rollback                         Rollback to previous specification
+      --secret-add secret                Add or update a secret on a service
+      --secret-rm list                   Remove a secret (default [])
+      --stop-grace-period duration       Time to wait before force killing a container (ns|us|ms|s|m|h) (default none)
+  -t, --tty                              Allocate a pseudo-TTY
+      --update-delay duration            Delay between updates (ns|us|ms|s|m|h) (default 0s)
+      --update-failure-action string     Action on update failure (pause|continue) (default "pause")
+      --update-max-failure-ratio float   Failure rate to tolerate during an update
+      --update-monitor duration          Duration after each task update to monitor for failure (ns|us|ms|s|m|h) (default 0s)
+      --update-parallelism uint          Maximum number of tasks updated simultaneously (0 to update all at once) (default 1)
+  -u, --user string                      Username or UID (format: <name|uid>[:<group|gid>])
+      --with-registry-auth               Send registry authentication details to swarm agents
+  -w, --workdir string                   Working directory inside the container
+  ```
+  ##Example of `docker plugin` how we use it.
+  
+  ###Lab 
+
+There are three virtual machine like `vm1`, `vm2`, and `vm3`
+
+Acoording to Docker meetup video we have to start from vm2
+
+In vm2 
+
+started with `docker plugin` --help command
+```
+root@vm2:~# docker plugin --help
+
+Usage:  docker plugin COMMAND
+
+Manage plugins
+
+Options:
+      --help   Print usage
+
+Commands:
+  create      Create a plugin from a rootfs and configuration. Plugin data directory must contain config.json and rootfs directory.
+  disable     Disable a plugin
+  enable      Enable a plugin
+  inspect     Display detailed information on one or more plugins
+  install     Install a plugin
+  ls          List plugins
+  push        Push a plugin to a registry
+  rm          Remove one or more plugins
+  set         Change settings for a plugin
+
+Run 'docker plugin COMMAND --help' for more information on a command.
+root@vm2:~#
+```
+
+This is the process how we install `docker plugin` which make enable, disable or inspect. 
+```
+root@vm2:~# docker plugin install vieux/sshfs
+Plugin "vieux/sshfs" is requesting the following privileges:
+ - network: [host]
+ - device: [/dev/fuse]
+ - capabilities: [CAP_SYS_ADMIN]
+Do you grant the above permissions? [y/N] y
+latest: Pulling from vieux/sshfs
+ca06593c3b54: Download complete
+Digest: sha256:660b5302a6951aa1c47c3042ca288d16973f236adbd2f77fc5571f164143adf5
+Status: Downloaded newer image for vieux/sshfs:latest
+Installed plugin vieux/sshfs
+root@vm2:~#
+```
+```
+root@vm2:~# docker plugin list
+ID                  NAME                 DESCRIPTION               ENABLED
+404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   true
+root@vm2:~#
+```
+when we install docker plugin without add argument `DEBUG` option it will be `0`.
+
+we give trick how we add or make it in another example below:
+
+
+```
+root@vm2:~# docker plugin inspect vieux/sshfs:latest
+[
+    {
+        "Config": {
+            "Args": {
+                "Description": "",
+                "Name": "",
+                "Settable": null,
+                "Value": null
+            },
+            "Description": "sshFS plugin for Docker",
+            "Documentation": "https://docs.docker.com/engine/extend/plugins/",
+            "Entrypoint": [
+                "/docker-volume-sshfs"
+            ],
+            "Env": [
+                {
+                    "Description": "",
+                    "Name": "DEBUG",
+                    "Settable": [
+                        "value"
+                    ],
+                    "Value": "0"
+                }
+            ],
+            "Interface": {
+                "Socket": "sshfs.sock",
+                "Types": [
+                    "docker.volumedriver/1.0"
+                ]
+            },
+            "Linux": {
+                "AllowAllDevices": false,
+                "Capabilities": [
+                    "CAP_SYS_ADMIN"
+                ],
+                "Devices": [
+                    {
+                        "Description": "",
+                        "Name": "",
+                        "Path": "/dev/fuse",
+                        "Settable": null
+                    }
+                ]
+            },
+            "Mounts": null,
+            "Network": {
+                "Type": "host"
+            },
+            "PropagatedMount": "/mnt",
+            "User": {},
+            "WorkDir": "",
+            "rootfs": {
+                "diff_ids": [
+                    "sha256:0f70aa9391794138ca1b4db149027f1c56ce28136b0eba522bd8af7ea09bfb84"
+                ],
+                "type": "layers"
+            }
+        },
+        "Enabled": true,
+        "Id": "404d489a9b964279b4216adfddd51af1aec4607b14a0e44964d784f1eaa05963",
+        "Name": "vieux/sshfs:latest",
+        "Settings": {
+            "Args": [],
+            "Devices": [
+                {
+                    "Description": "",
+                    "Name": "",
+                    "Path": "/dev/fuse",
+                    "Settable": null
+                }
+            ],
+            "Env": [
+                "DEBUG=0"
+            ],
+            "Mounts": []
+        }
+    }
+]
+root@vm2:~#
+```
+```
+root@vm2:~# docker plugin disable  vieux/sshfs:latest
+vieux/sshfs:latest
+```
+```
+root@vm2:~# docker plugin set --help
+
+Usage:  docker plugin set PLUGIN KEY=VALUE [KEY=VALUE...]
+
+Change settings for a plugin
+
+Options:
+      --help   Print usage
+```
+```
+root@vm2:~# docker plugin set vieux/sshfs DEBUG=1
+```
+```
+root@vm2:~# docker plugin list
+ID                  NAME                 DESCRIPTION               ENABLED
+404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   false
+root@vm2:~# docker plugin enable vieux/sshfs:latest
+vieux/sshfs:latest
+```
+```
+root@vm2:~# docker plugin list
+ID                  NAME                 DESCRIPTION               ENABLED
+404d489a9b96        vieux/sshfs:latest   sshFS plugin for Docker   true
+```
+```
+root@vm2:~# docker plugin inspect vieux/sshfs:latest
+[
+    {
+        "Config": {
+            "Args": {
+                "Description": "",
+                "Name": "",
+                "Settable": null,
+                "Value": null
+            },
+            "Description": "sshFS plugin for Docker",
+            "Documentation": "https://docs.docker.com/engine/extend/plugins/",
+            "Entrypoint": [
+                "/docker-volume-sshfs"
+            ],
+            "Env": [
+                {
+                    "Description": "",
+                    "Name": "DEBUG",
+                    "Settable": [
+                        "value"
+                    ],
+                    "Value": "0"
+                }
+            ],
+            "Interface": {
+                "Socket": "sshfs.sock",
+                "Types": [
+                    "docker.volumedriver/1.0"
+                ]
+            },
+            "Linux": {
+                "AllowAllDevices": false,
+                "Capabilities": [
+                    "CAP_SYS_ADMIN"
+                ],
+                "Devices": [
+                    {
+                        "Description": "",
+                        "Name": "",
+                        "Path": "/dev/fuse",
+                        "Settable": null
+                    }
+                ]
+            },
+            "Mounts": null,
+            "Network": {
+                "Type": "host"
+            },
+            "PropagatedMount": "/mnt",
+            "User": {},
+            "WorkDir": "",
+            "rootfs": {
+                "diff_ids": [
+                    "sha256:0f70aa9391794138ca1b4db149027f1c56ce28136b0eba522bd8af7ea09bfb84"
+                ],
+                "type": "layers"
+            }
+        },
+        "Enabled": true,
+        "Id": "404d489a9b964279b4216adfddd51af1aec4607b14a0e44964d784f1eaa05963",
+        "Name": "vieux/sshfs:latest",
+        "Settings": {
+            "Args": [],
+            "Devices": [
+                {
+                    "Description": "",
+                    "Name": "",
+                    "Path": "/dev/fuse",
+                    "Settable": null
+                }
+            ],
+            "Env": [
+                "DEBUG=1"
+            ],
+            "Mounts": []
+        }
+    }
+]
+root@vm2:~#
+```
+In vm3
+```
+root@vm3:~# docker plugin install vieux/sshfs DEBUG=1
+Plugin "vieux/sshfs" is requesting the following privileges:
+ - network: [host]
+ - device: [/dev/fuse]
+ - capabilities: [CAP_SYS_ADMIN]
+Do you grant the above permissions? [y/N] y
+latest: Pulling from vieux/sshfs
+ca06593c3b54: Download complete
+Digest: sha256:660b5302a6951aa1c47c3042ca288d16973f236adbd2f77fc5571f164143adf5
+Status: Downloaded newer image for vieux/sshfs:latest
+Installed plugin vieux/sshfs
+root@vm3:~#
+```
+```
+root@vm3:~# docker plugin install --help
+
+Usage:  docker plugin install [OPTIONS] PLUGIN [KEY=VALUE...]
+
+Install a plugin
+
+Options:
+      --alias string            Local name for plugin
+      --disable                 Do not enable the plugin on install
+      --disable-content-trust   Skip image verification (default true)
+      --grant-all-permissions   Grant all permissions necessary to run the plugin
+      --help                    Print usage
+```
+```
+[root@vm1 tmp]# mkdir shared
+[root@vm1 tmp]# ls
+shared  vboxguest-Module.symvers
+[root@vm1 tmp]# cd shared/
+[root@vm1 shared]# ls
+[root@vm1 shared]# echo hello > world
+[root@vm1 shared]# ls
+world
+```
+```
+[root@vm3 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
+sshvolume
+[root@vm3 ~]# docker volume list
+DRIVER               VOLUME NAME
+vieux/sshfs:latest   sshvolume
+```
+```
+[root@vm3 code]# docker run -it -v sshvolume:/data  alpine sh
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+0a8490d0dfd3: Pull complete 
+Digest: sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Status: Downloaded newer image for alpine:latest
+/ # cd /data/
+/data # ls
+world
+/data # touch {1..9}
+/data # ls
+world   {1..9}
+```
+In vm2
+```
+[root@vm2 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
+sshvolume
+```
+```
+[root@vm2 ~]# docker volume list
+DRIVER               VOLUME NAME
+vieux/sshfs:latest   sshvolume
+```
+```
+[root@vm2 code]# docker run -it -v sshvolume:/data  alpine sh
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+0a8490d0dfd3: Pull complete 
+Digest: sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Status: Downloaded newer image for alpine:latest
+/ # cd /data/
+/data # ls
+/data # ls
+world   {1..9}
+```
+```
+[root@vm1 ~]# docker swarm init --advertise-addr 192.168.56.201
+Swarm initialized: current node (e4fp9b0ud7fjldf58abnm6bzf) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join \
+    --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
+    192.168.56.201:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+```
+```
+[root@vm2 ~]# docker swarm join \
+>     --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
+>     192.168.56.201:2377
+This node joined a swarm as a worker.
+```
+```
+[root@vm3 ~]# docker swarm join \
+>     --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
+>     192.168.56.201:2377
+This node joined a swarm as a worker.
+```
+```
+[root@vm1 ~]# docker node list
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+3ijcv6et88g81sq9thjhlfl7t    vm2       Ready   Active
+e4fp9b0ud7fjldf58abnm6bzf *  vm1       Ready   Active        Leader
+nxu8s5frib7ntn8fuc4babepq    vm3       Ready   Active
+```
+```
+[root@vm1 ~]# docker container list
+CONTAINER ID        IMAGE          COMMAND           CREATED           STATUS            PORTS             NAMES
+```
+```
+[root@vm1 ~]# docker service create --mount src=sshvolumes,dst=/data --replicas 2 --name foo alpine sh -c "while true;do echo \`cat /etc/hostname\` >> /data/hostnames; sleep 1; done"
+arh5p9k6pitokwau78ul33y28
+[root@vm1 ~]# docker service list
+ID            NAME  MODE        REPLICAS  IMAGE
+arh5p9k6pito  foo   replicated  2/2       alpine:latest
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# docker container list
+CONTAINER ID        IMAGE                                                                            COMMAND                  CREATED             STATUS              PORTS               NAMES
+23320a295c9a        alpine@sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8   "sh -c 'while true..."   7 minutes ago       Up 7 minutes                            foo.2.rcqsxhhabpmnmrwszqu98wm73
+```
+```
+[root@vm1 ~]# docker service ps foo
+ID            NAME   IMAGE          NODE  DESIRED STATE  CURRENT STATE          ERROR  PORTS
+i7a7ljvjapf2  foo.1  alpine:latest  vm2   Running        Running 3 minutes ago
+rcqsxhhabpmn  foo.2  alpine:latest  vm1   Running        Running 2 minutes ago
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# cd /tmp/shared/
+[root@vm1 shared]# ls
+{1..9}  hostnames  world
+```
+```
+[root@vm1 shared]# cat hostnames 
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+[root@vm1 shared]#
+```
+```
+[root@vm1 shared]# cat hostnames | less
+
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+cbd14efe1392
+:
+```
+#COMPOSE TO SWARM 
+```
+[root@vm1 ~]# docker stack --help
+
+Usage:  docker stack COMMAND
+
+Manage Docker stacks
+
+Options:
+      --help   Print usage
+
+Commands:
+  deploy      Deploy a new stack or update an existing stack
+  ls          List stacks
+  ps          List the tasks in the stack
+  rm          Remove the stack
+  services    List the services in the stack
+
+Run 'docker stack COMMAND --help' for more information on a command.
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# docker stack deploy --help
+
+Usage:  docker stack deploy [OPTIONS] STACK
+
+Deploy a new stack or update an existing stack
+
+Aliases:
+  deploy, up
+
+Options:
+  -c, --compose-file string   Path to a Compose file
+      --help                  Print usage
+      --with-registry-auth    Send registry authentication details to Swarm agents
+[root@vm1 ~]#
+```
+```
+[root@vm1 ~]# git clone https://github.com/cloudyuga/rsvpapp.git
+Cloning into 'rsvpapp'...
+remote: Counting objects: 247, done.
+remote: Compressing objects: 100% (24/24), done.
+remote: Total 247 (delta 9), reused 0 (delta 0), pack-reused 222
+Receiving objects: 100% (247/247), 102.27 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (115/115), done.
+Checking connectivity... done.
+[root@vm1 ~]# cd rsvpapp/
+[root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
+Unsupported Compose file version: "2". The only version supported is "3" (or "3.0")
+[root@vm1 rsvpapp]# nano docker-compose.yml
+[root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
+Ignoring deprecated options:
+
+expose: Exposing ports is unnecessary - services on the same network can access each other's containers on any port.
+
+Creating network FOO_rsvpnet
+Creating service FOO_mongodb
+Creating service FOO_web
+[root@vm1 rsvpapp]# docker stack list
+NAME  SERVICES
+FOO   2
+[root@vm1 rsvpapp]#
+```
+```
+[root@vm1 rsvpapp]# docker stack services FOO
+ID            NAME         MODE        REPLICAS  IMAGE
+fwbn4uvu3jos  FOO_web      replicated  1/1       teamcloudyuga/rsvpapp:mooc
+w5fm9e07hgl0  FOO_mongodb  replicated  1/1       mongo:3.3
+[root@vm1 rsvpapp]#
+```
+```
+[root@vm1 rsvpapp]# docker stack rm FOO
+Removing service FOO_web
+Removing service FOO_mongodb
+Removing network FOO_rsvpnet
+```
+
