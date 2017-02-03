@@ -301,6 +301,75 @@ WARNING! This will remove:
 Are you sure you want to continue? [y/N] y
 Total reclaimed space: 0 B
 ```
+#Example of pervious 
+```
+root@debian:~# docker pull alpine
+Using default tag: latest
+latest: Pulling from library/alpine
+0a8490d0dfd3: Pull complete 
+Digest: sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Status: Downloaded newer image for alpine:latest
+```
+```
+root@debian:~# docker system df
+TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
+Images              1                   0                   3.984 MB            3.984 MB (100%)
+Containers          0                   0                   0 B                 0 B
+Local Volumes       0                   0                   0 B                 0 B
+```
+```
+root@debian:~# docker pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+5040bd298390: Pull complete 
+333547110842: Pull complete 
+4df1e44d2a7a: Pull complete 
+Digest: sha256:f2d384a6ca8ada733df555be3edc427f2e5f285ebf468aae940843de8cf74645
+Status: Downloaded newer image for nginx:latest
+```
+```
+root@debian:~# docker system df
+TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
+Images              2                   0                   185.8 MB            185.8 MB (100%)
+Containers          0                   0                   0 B                 0 B
+Local Volumes       0                   0                   0 B                 0 B
+```
+```
+root@debian:~# docker run -itd ubuntu
+Unable to find image 'ubuntu:latest' locally
+latest: Pulling from library/ubuntu
+8aec416115fd: Pull complete
+695f074e24e3: Pull complete
+946d6c48c2a7: Pull complete
+bc7277e579f0: Pull complete
+2508cbcde94b: Pull complete
+Digest: sha256:71cd81252a3563a03ad8daee81047b62ab5d892ebbfbf71cf53415f29c130950
+Status: Downloaded newer image for ubuntu:latest
+2b554ba3a43dfe775c1da1898ab1de6a967bd04a6aad251e96da65a428ab3c44
+```
+```
+root@debian:~# docker system df
+TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
+Images              3                   1                   315.3 MB            185.8 MB (58%)
+Containers          1                   1                   0 B                 0 B
+Local Volumes       0                   0                   0 B                 0 B
+```
+```
+root@debian:~# docker run -v /mnt/:/data -itd ubuntu
+2d983d5509c2c6369449000654f39342a014644f37b9b245118e40e3c2599e05
+root@debian:~# docker system df
+TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
+Images              3                   1                   315.3 MB            185.8 MB (58%)
+Containers          2                   2                   0 B                 0 B
+Local Volumes       0                   0                   0 B                 0 B
+```
+```
+root@debian:~# docker container list
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
+2d983d5509c2        ubuntu              "/bin/bash"         18 seconds ago       Up 18 seconds                           kind_bohr
+2b554ba3a43d        ubuntu              "/bin/bash"         About a minute ago   Up About a minute                       kind_lumiere
+```
+
 7) In `docker build` option `-q` argument added when we use `-q` an it remove intermediate containers
     after a successful build or many more etc. Press --help.
 ```
@@ -405,6 +474,7 @@ Commands:
 
 Run 'docker plugin COMMAND --help' for more information on a command.
 ```
+
 10) In `docker service` command
 ```
 root@debian:~# docker service --help
