@@ -1391,6 +1391,11 @@ Options:
       --with-registry-auth    Send registry authentication details to Swarm agents
 [root@vm1 ~]#
 ```
+Take old version compose file and change in to version 2 to 3 in `docker-compose.yml`.
+
+we have to take https://github.com/cloudyuga/rsvpapp.git
+
+Clone a repository from github
 ```
 [root@vm1 ~]# git clone https://github.com/cloudyuga/rsvpapp.git
 Cloning into 'rsvpapp'...
@@ -1400,10 +1405,92 @@ remote: Total 247 (delta 9), reused 0 (delta 0), pack-reused 222
 Receiving objects: 100% (247/247), 102.27 KiB | 0 bytes/s, done.
 Resolving deltas: 100% (115/115), done.
 Checking connectivity... done.
+```
+change the directory or go to `rsvpapp`
+```
 [root@vm1 ~]# cd rsvpapp/
+```
+If we deploy from older version they can't be supported.
+```
 [root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
 Unsupported Compose file version: "2". The only version supported is "3" (or "3.0")
+```
+we can change version 2 into 3
+
+berfore
+```
 [root@vm1 rsvpapp]# nano docker-compose.yml
+version: '2'
+services:
+ mongodb:
+   image: mongo:3.3   
+   expose:                 
+     - "27017"
+   volumes:
+     - db_data:/data/db
+   environment:    
+    MONGODB_DATABASE: rsvpdata
+   networks:
+    - rsvpnet
+
+ web:
+   image: teamcloudyuga/rsvpapp:mooc
+   ports:
+    - "5000:5000"
+   environment:
+    MONGODB_HOST: mongodb
+    LINK: http://www.meetup.com/cloudyuga/
+    TEXT1: CloudYuga 
+    TEXT2: Garage RSVP!
+    LOGO: https://raw.githubusercontent.com/cloudyuga/rsvpapp/master/static/cloudyuga.png
+    COMPANY: CloudYuga Technology Pvt. Ltd.
+   networks:
+    - rsvpnet
+
+networks:
+  rsvpnet:
+
+volumes:
+   db_data:
+```
+After
+```
+[root@vm1 rsvpapp]# nano docker-compose.yml
+version: '3'
+services:
+ mongodb:
+   image: mongo:3.3   
+   expose:                 
+     - "27017"
+   volumes:
+     - db_data:/data/db
+   environment:    
+    MONGODB_DATABASE: rsvpdata
+   networks:
+    - rsvpnet
+
+ web:
+   image: teamcloudyuga/rsvpapp:mooc
+   ports:
+    - "5000:5000"
+   environment:
+    MONGODB_HOST: mongodb
+    LINK: http://www.meetup.com/cloudyuga/
+    TEXT1: CloudYuga 
+    TEXT2: Garage RSVP!
+    LOGO: https://raw.githubusercontent.com/cloudyuga/rsvpapp/master/static/cloudyuga.png
+    COMPANY: CloudYuga Technology Pvt. Ltd.
+   networks:
+    - rsvpnet
+
+networks:
+  rsvpnet:
+
+volumes:
+   db_data:
+```
+```
+```
 [root@vm1 rsvpapp]# docker stack deploy -c docker-compose.yml FOO
 Ignoring deprecated options:
 
