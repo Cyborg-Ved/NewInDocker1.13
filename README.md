@@ -455,6 +455,7 @@ Commands:
 Run 'docker plugin COMMAND --help' for more information on a command.
 ```
 10) In `docker service` command
+```
 root@debian:~# docker service --help
                                                                                                                                                      
 Usage:  docker service COMMAND                                                                                                                       
@@ -541,7 +542,7 @@ Options:
       --with-registry-auth               Send registry authentication details to swarm agents
   -w, --workdir string                   Working directory inside the container
   ```
-  ##Example of `docker plugin` how we use it.
+ ##Example of `docker plugin` how we use it.
   
   ###Lab 
 
