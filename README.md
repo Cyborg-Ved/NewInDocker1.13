@@ -80,6 +80,52 @@ Commands:
 
 Run 'docker COMMAND --help' for more information on a command.
 ```
+2) Use `DOCKER_HIDE_LEGACY_COMMANDS=1 docker` to hide legacy commands.
+
+This may help which one new and which one old 
+```
+root@debian:~# DOCKER_HIDE_LEGACY_COMMANDS=1 docker
+
+Usage:  docker COMMAND
+
+A self-sufficient runtime for containers
+
+Options:
+      --config string      Location of client config files (default "/root/.docker")
+  -D, --debug              Enable debug mode
+      --help               Print usage
+  -H, --host list          Daemon socket(s) to connect to (default [])
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Management Commands:
+  container   Manage containers
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  stack       Manage Docker stacks
+  swarm       Manage Swarm
+  system      Manage Docker
+  volume      Manage volumes
+
+Commands:
+  build       Build an image from a Dockerfile
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  run         Run a command in a new container
+  search      Search the Docker Hub for images
+  version     Show the Docker version information
+
+Run 'docker COMMAND --help' for more information on a command.
+```
 2) Earlier we check by `docker info` to `docker system info`
 ```
 root@debian:~# docker system info
@@ -169,11 +215,7 @@ Commands:
 
 Run 'docker container COMMAND --help' for more information on a command.
 ```
-check running container in different views something like:
-```
-root@debian:~# docker ps
-CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-```
+check running container list  in different views something like:
 ```
 root@debian:~# docker container list
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
@@ -217,50 +259,7 @@ old version we have to seen like:
 root@debian:~# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 ```
-5) Use `DOCKER_HIDE_LEGACY_COMMANDS=1 docker` to hide legacy commands:
-```
-root@debian:~# DOCKER_HIDE_LEGACY_COMMANDS=1 docker
 
-Usage:  docker COMMAND
-
-A self-sufficient runtime for containers
-
-Options:
-      --config string      Location of client config files (default "/root/.docker")
-  -D, --debug              Enable debug mode
-      --help               Print usage
-  -H, --host list          Daemon socket(s) to connect to (default [])
-  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
-      --tls                Use TLS; implied by --tlsverify
-      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
-      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
-      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
-      --tlsverify          Use TLS and verify the remote
-  -v, --version            Print version information and quit
-
-Management Commands:
-  container   Manage containers
-  image       Manage images
-  network     Manage networks
-  node        Manage Swarm nodes
-  plugin      Manage plugins
-  secret      Manage Docker secrets
-  service     Manage services
-  stack       Manage Docker stacks
-  swarm       Manage Swarm
-  system      Manage Docker
-  volume      Manage volumes
-
-Commands:
-  build       Build an image from a Dockerfile
-  login       Log in to a Docker registry
-  logout      Log out from a Docker registry
-  run         Run a command in a new container
-  search      Search the Docker Hub for images
-  version     Show the Docker version information
-
-Run 'docker COMMAND --help' for more information on a command.
-```
 6) It have advance feature in `docker system` check with help
 ```
 root@debian:~# docker system --help
