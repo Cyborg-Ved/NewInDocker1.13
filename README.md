@@ -1351,7 +1351,7 @@ cbd14efe1392
 #COMPOSE TO SWARM 
 Stack is new in Docker 1.13. So, how can we use following step:
 
-An it will applicable when `docker swarm` initialized
+An it will an applicable when `docker swarm` initialized
 
 Check help by `docker stack --help` and what type of option or argment use.
 ```
