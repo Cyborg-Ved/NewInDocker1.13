@@ -1060,12 +1060,12 @@ PID   USER     TIME   COMMAND
     1 root       0:00 sh
     5 root       0:00 ps aux
 / # ps aux
-```
-```
+press CTRL +p +q
 root@ved /home/ved/mybox$ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 971300122cc9        alpine              "sh"                42 seconds ago      Up 41 seconds                           xenodochial_brahmagupta
 ```
+4. Start the container with name and access containers with the names.
 ```
 root@ved /home/ved/mybox$ docker run -d --name=cloudyuga nginx:alpine
 Unable to find image 'nginx:alpine' locally
@@ -1267,4 +1267,73 @@ root@ved /home/ved/mybox$ docker inspect cloudyuga | less
     }
 ]
 (END)
+```
+```
+root@ved /home/ved/mybox$ docker exec -it cloudyuga sh
+/ # 
+ press CTRL +p +q
+root@ved /home/ved/mybox$ docker stop cloudyuga
+cloudyuga
+root@ved /home/ved/mybox$ docker rm cloudyuga
+cloudyuga
+```
+5. Remove running container forcefully.
+```
+root@ved /home/ved/mybox$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+971300122cc9        alpine              "sh"                33 minutes ago      Up 33 minutes                           xenodochial_brahmagupta
+
+root@ved /home/ved/mybox$ docker rm -f 971300122cc9
+971300122cc9
+```
+##Image Operations
+1. Check whether Docker-machine created in local linux which is running or not?
+```
+root@ved /home/ved/mybox$ docker-machine ls
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
+linux   -        virtualbox   Running   tcp://192.168.99.100:2376           v1.13.0
+```
+2. If the Docker-machine is not running then start it as below
+```
+$ docker-machine stop linux
+$ docker-machine start linux
+```
+3. List all the locally present images
+```
+root@ved /home/ved/mybox$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx               alpine              c24ab147adf9        9 days ago          54.3 MB
+alpine              latest              88e169ea8f46        5 weeks ago         3.98 MB
+```
+4. Pull images from repository.
+```
+root@ved /home/ved/mybox$ docker pull busybox
+Using default tag: latest
+latest: Pulling from library/busybox
+4b0bc1c4050b: Pull complete
+Digest: sha256:817a12c32a39bbe394944ba49de563e085f1d3c5266eb8e9723256bc4448680e
+Status: Downloaded newer image for busybox:latest
+
+root@ved /home/ved/mybox$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx               alpine              c24ab147adf9        9 days ago          54.3 MB
+busybox             latest              7968321274dc        2 weeks ago         1.11 MB
+alpine              latest              88e169ea8f46        5 weeks ago         3.98 MB
+
+```
+5. Tag image and remove the images
+```
+root@ved /home/ved/mybox$ docker tag busybox cloudyuga/busybox:test
+root@ved /home/ved/mybox$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx               alpine              c24ab147adf9        9 days ago          54.3 MB
+busybox             latest              7968321274dc        2 weeks ago         1.11 MB
+cloudyuga/busybox   test                7968321274dc        2 weeks ago         1.11 MB
+alpine              latest              88e169ea8f46        5 weeks ago         3.98 MB
+root@ved /home/ved/mybox$ docker rmi alpine
+Untagged: alpine:latest
+Untagged: alpine@sha256:dfbd4a3a8ebca874ebd2474f044a0b33600d4523d03b0df76e5c5986cb02d7e8
+Deleted: sha256:88e169ea8f46ff0d0df784b1b254a15ecfaf045aee1856dca1ec242fdd231ddd
+Deleted: sha256:60ab55d3379d47c1ba6b6225d59d10e1f52096ee9d5c816e42c635ccc57a5a2b
+
 ```
