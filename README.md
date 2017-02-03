@@ -250,11 +250,12 @@ Commands:
 
 Run 'docker image COMMAND --help' for more information on a command.
 ```
+In ver 1.13
 ```
 root@debian:~# docker image list
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 ```
-old version we have to seen like:
+In ver 1.12x
 ```
 root@debian:~# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
