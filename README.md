@@ -850,7 +850,7 @@ shared  vboxguest-Module.symvers
 world
 ```
 
-Earlier we have an add plugin `vieux/sshfs` we can use to create volume in `vm1` in `/tmp/shared/` directory and olume name will be sshvolume
+Earlier we have an add plugin `vieux/sshfs` we can use to create volume in `vm1` in `/tmp/shared/` directory and volume name will be `sshvolume`.
 ```
 [root@vm3 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
 sshvolume
@@ -858,6 +858,7 @@ sshvolume
 DRIVER               VOLUME NAME
 vieux/sshfs:latest   sshvolume
 ```
+Mount the `sshvolume` volume in `alpine` image in `/data`.
 ```
 [root@vm3 code]# docker run -it -v sshvolume:/data  alpine sh
 Unable to find image 'alpine:latest' locally
@@ -872,7 +873,8 @@ world
 /data # ls
 world   {1..9}
 ```
-In vm2
+
+We can also use this step in `vm2`.
 ```
 [root@vm2 ~]# docker volume create -d vieux/sshfs -o sshcmd=root@192.168.56.201:/tmp/shared -o password=redhat sshvolume
 sshvolume
@@ -882,6 +884,7 @@ sshvolume
 DRIVER               VOLUME NAME
 vieux/sshfs:latest   sshvolume
 ```
+Finally its works
 ```
 [root@vm2 code]# docker run -it -v sshvolume:/data  alpine sh
 Unable to find image 'alpine:latest' locally
@@ -894,6 +897,11 @@ Status: Downloaded newer image for alpine:latest
 /data # ls
 world   {1..9}
 ```
+
+We can also use this above step in `docker swarm`.
+
+Initialize a swarm in `vm1`.
+
 ```
 [root@vm1 ~]# docker swarm init --advertise-addr 192.168.56.201
 Swarm initialized: current node (e4fp9b0ud7fjldf58abnm6bzf) is now a manager.
@@ -906,6 +914,7 @@ To add a worker to this swarm, run the following command:
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
+`vm2` `vm3` join a swarm as a node.
 ```
 [root@vm2 ~]# docker swarm join \
 >     --token SWMTKN-1-5pg4jmfnvnva8c54qa6uhfhjuweu80js1mhd7egh76cayy3qrh-9ppwh7c29brlciaaxkxcehlij \
@@ -918,6 +927,8 @@ This node joined a swarm as a worker.
 >     192.168.56.201:2377
 This node joined a swarm as a worker.
 ```
+
+Check list of node by `docker node list`.
 ```
 [root@vm1 ~]# docker node list
 ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
@@ -925,13 +936,95 @@ ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
 e4fp9b0ud7fjldf58abnm6bzf *  vm1       Ready   Active        Leader
 nxu8s5frib7ntn8fuc4babepq    vm3       Ready   Active
 ```
+Check list of running container by `docker container list` we also use as old like `docker ps`.
 ```
 [root@vm1 ~]# docker container list
 CONTAINER ID        IMAGE          COMMAND           CREATED           STATUS            PORTS             NAMES
 ```
+First we need to help how to use docker service check by `docker service help`.
 ```
-[root@vm1 ~]# docker service create --mount src=sshvolumes,dst=/data --replicas 2 --name foo alpine sh -c "while true;do echo \`cat /etc/hostname\` >> /data/hostnames; sleep 1; done"
+root@vm1:~# docker service --help
+
+Usage:  docker service COMMAND
+
+Manage services
+
+Options:
+      --help   Print usage
+
+Commands:
+  create      Create a new service
+  inspect     Display detailed information on one or more services
+  ls          List services
+  ps          List the tasks of a service
+  rm          Remove one or more services
+  scale       Scale one or multiple replicated services
+  update      Update a service
+
+Run 'docker service COMMAND --help' for more information on a command.
+```
+We can also use `docker service create --help` beacause many option added from previous version.
+```
+root@vm1:~# docker service create --help
+                                                                                                                                      
+Usage:  docker service create [OPTIONS] IMAGE [COMMAND] [ARG...]                                                                      
+                                                                                                                                                     
+Create a new service                                                                                                                                                    
+                                                                                                                                                                        
+Options:                                                                                                                                                                
+      --constraint list                  Placement constraints (default [])                                                                                             
+      --container-label list             Container labels (default [])
+      --dns list                         Set custom DNS servers (default [])
+      --dns-option list                  Set DNS options (default [])
+      --dns-search list                  Set custom DNS search domains (default [])
+      --endpoint-mode string             Endpoint mode (vip or dnsrr)
+  -e, --env list                         Set environment variables (default [])
+      --env-file list                    Read in a file of environment variables (default [])
+      --group list                       Set one or more supplementary user groups for the container (default [])
+      --health-cmd string                Command to run to check health
+      --health-interval duration         Time between running the check (ns|us|ms|s|m|h) (default none)
+      --health-retries int               Consecutive failures needed to report unhealthy
+      --health-timeout duration          Maximum time to allow one check to run (ns|us|ms|s|m|h) (default none)
+      --help                             Print usage
+      --host list                        Set one or more custom host-to-IP mappings (host:ip) (default [])
+      --hostname string                  Container hostname
+  -l, --label list                       Service labels (default [])
+      --limit-cpu decimal                Limit CPUs (default 0.000)
+      --limit-memory bytes               Limit Memory (default 0 B)
+      --log-driver string                Logging driver for service
+      --log-opt list                     Logging driver options (default [])
+      --mode string                      Service mode (replicated or global) (default "replicated")
+      --mount mount                      Attach a filesystem mount to the service
+      --name string                      Service name
+      --network list                     Network attachments (default [])
+      --no-healthcheck                   Disable any container-specified HEALTHCHECK
+  -p, --publish port                     Publish a port as a node port
+      --replicas uint                    Number of tasks (default none)
+      --reserve-cpu decimal              Reserve CPUs (default 0.000)
+      --reserve-memory bytes             Reserve Memory (default 0 B)
+      --restart-condition string         Restart when condition is met (none, on-failure, or any)
+      --restart-delay duration           Delay between restart attempts (ns|us|ms|s|m|h) (default none)
+      --restart-max-attempts uint        Maximum number of restarts before giving up (default none)
+      --restart-window duration          Window used to evaluate the restart policy (ns|us|ms|s|m|h) (default none)
+      --secret secret                    Specify secrets to expose to the service
+      --stop-grace-period duration       Time to wait before force killing a container (ns|us|ms|s|m|h) (default none)
+  -t, --tty                              Allocate a pseudo-TTY
+      --update-delay duration            Delay between updates (ns|us|ms|s|m|h) (default 0s)
+      --update-failure-action string     Action on update failure (pause|continue) (default "pause")
+      --update-max-failure-ratio float   Failure rate to tolerate during an update
+      --update-monitor duration          Duration after each task update to monitor for failure (ns|us|ms|s|m|h) (default 0s)
+      --update-parallelism uint          Maximum number of tasks updated simultaneously (0 to update all at once) (default 1)
+  -u, --user string                      Username or UID (format: <name|uid>[:<group|gid>])
+      --with-registry-auth               Send registry authentication details to swarm agents
+  -w, --workdir string                   Working directory inside the container
+```
+
+```
+[root@vm1 ~]# docker service create --mount src=sshvolume,dst=/data --replicas 2 --name foo alpine sh -c "while true;do echo \`cat /etc/hostname\` >> /data/hostnames; sleep 1; done"
 arh5p9k6pitokwau78ul33y28
+```
+
+```
 [root@vm1 ~]# docker service list
 ID            NAME  MODE        REPLICAS  IMAGE
 arh5p9k6pito  foo   replicated  2/2       alpine:latest
